@@ -3,94 +3,259 @@
 </head>
 <body>
 <script data-processing-target="mycanvas" type="text/processing">
-int num = 70;
-myClass my[] = new myClass[num];
-void setup()
-{
-  size(window.outerWidth,window.outerHeight);
-  noStroke();
-  for(int i=0;i<num;i++)
-    my[i] = new myClass();
+  PImage starBg;
+  ArrayList<Point> myArr;
+  int starNum = 800;
+  int starLimit = 500;
+  int textSize = 210;
+  PFont font;
+  String text[] = {"디자인 프로그래밍","★☆★☆★","배경에 별이","깜빡이고","별똥별이","떨어지네","!@#!@#","Star!"};
+  int idx = 0;
 
-}
+  String myText = "Type something";
 
-void draw()
-{
-  background(0);
-  for(int i=0;i<num;i++)
+  Star myStar[] = new Star[starNum];
+
+
+  void setup()
   {
-   my[i].move();
+    size(window.outerWidth,window.outerHeight);
+    starBg = loadImage("bg.png");
+    myArr = new ArrayList();
 
-   for(int j=0;j<num;j++)
-   {
-     if(i==j)
-       continue;
-       if(my[i].isCrash(my[j].xpos,my[j].ypos,my[j].getBig()))
-         my[j].makeBig();
-   }
+    font = loadFont("휴먼가는샘체-70.vlw");
+
+
+    imageMode(CENTER);
+    starBg.resize(width,height);
+    for(int i=0;i<starNum;i++)
+      myStar[i] = new Star();
+
+    setText(text[idx]);
   }
 
-}
 
-class myClass
-{
- float xpos;
- float ypos;
- int big = 50;
- int small = 30;
 
- myClass()
- {
-   xpos =random(width);
-   ypos =random(height);
- }
-
- void move()
- {
-   xpos = random(xpos-5,xpos+5);
-   ypos = random(ypos-5,ypos+5);
-   fill(255,100);
-   ellipse(xpos,ypos,big,big);
-   fill(255,180);
-   ellipse(xpos,ypos,small,small);
-   fill(0);
-   text("Cell",xpos,ypos);
-
- }
-
-  boolean isCrash(float xp, float yp, float b)
+  void draw()
   {
-    if(dist(xpos,ypos,xp,yp)<small && big<=b)
+
+   image(starBg,width/2,height/2);
+   for(int i=0;i<starLimit;i++)
     {
-      small = 0;
-      big = 0;
-      xpos = -100;
-      ypos =-100;
+      if(i%starLimit/3==0)
+      {
+        myStar[i].drop();
+        myStar[i].dropDisplay();
+      }
+      else
+      {
+        myStar[i].shine();
+        myStar[i].display();
+      }
+   }
 
-      return true;
+   for(int i=0;i<myArr.size();i++){
+     myArr.get(i).update();
+     myArr.get(i).display();
+   }
+
+   description();
+   auto();
+  }
+
+  void description()
+  {
+   textSize(15);
+   fill(200+random(-30,30),180);
+   text("Click to Screen",width-width/5,height-height/20);
+      text(myText, 0, 0, width, height);
+  }
+
+  void auto()
+  {
+  for(int i=0;i<myArr.size();i++)
+  {
+    if(!myArr.get(i).isEnd())
+      return;
+  }
+  textChange();
+  }
+
+
+  void textChange()
+  {
+  myArr.clear();
+  idx++;
+
+  if(idx==text.length)
+    idx = 0;
+
+  setText(text[idx]);
+  }
+  void mouseClicked()
+  {
+  textChange();
+
+  }
+
+
+  void setText(String txt)
+  {
+  PGraphics pg = createGraphics(width, height);
+  pg.beginDraw();
+  pg.fill(0);
+  pg.textAlign(CENTER);
+  pg.textFont(font,textSize);
+  pg.text(txt,width/2,height/2);
+  pg.endDraw();
+  pg.loadPixels();
+
+  for(int h=0;h<height;h+=4)
+    for(int w=0;w<width;w+=4)
+    {
+       if(pg.pixels[width*h+w]!=0){
+         Point temp = new Point(w,h);
+         myArr.add(temp);
+       }
     }
-    return false;
   }
 
-  void makeBig()
+    // 포인트 이벤트
+  class Point
   {
-    big+=20;
-    small+=20;
+    PVector pos;
+    PVector des;
+    PVector vel;
+    PVector acc;
+
+    float limit = 1;
+    int speed = (int)random(5,12);
+    float size = random(1,6);
+
+    Point(float x, float y)
+    {
+      pos = new PVector(random(0,width),random(0,height));
+      des = new PVector(x,y);
+      vel = new PVector(0,0);
+      acc = new PVector(0,0);
+    }
+
+    void display()
+    {
+       fill(255);
+       ellipse(pos.x,pos.y,size,size);
+    }
+
+    void update()
+    {
+      float distance = dist(pos.x,pos.y,des.x,des.y);
+      float proximityMult = 1.0;
+
+      if(distance<50)
+      {
+          proximityMult = distance/50;
+      }
+
+      //벡터의 방향과 크기를 정해준다.
+        PVector toward = new PVector(this.des.x,this.des.y);
+        toward.sub(pos);
+        toward.normalize();
+        toward.mult(proximityMult*speed);
+
+
+        PVector steer = new PVector(toward.x,toward.y);
+        steer.sub(vel);
+
+
+        acc.add(steer);
+        vel.add(acc);
+        pos.add(vel);
+
+        acc.mult(0);
+    }
+
+    boolean isEnd()
+    {
+      float distance = dist(pos.x,pos.y,des.x,des.y);
+      if(distance <5)
+        return true;
+      else
+        return false;
+    }
   }
 
-  float getX()
+  //별 효과 모음
+  class Star
   {
-    return xpos;
-  }
-  float getY()
-  {
-   return ypos;
-  }
-  float getBig()
-  {
-    return big;
-  }
+    float xpos, ypos;
+    PVector location;
+    float brightness;
+    float starSize;
+    float light;
+    float dropSpeed = random(1,4);
 
+
+    Star()
+    {
+      noStroke();
+      location = new PVector(random(width),random(height));
+      starSize = random(3,7);
+      light = random(1,7);
+      brightness =30;
+    }
+
+    void display()
+    {
+      for(int i=0;i<starSize;i++)
+      {
+        fill(255,brightness-i*5);
+        ellipse(location.x,location.y,i,i);
+      }
+    }
+
+    //빛나는 효과
+    void shine()
+    {
+      if(brightness>255){
+        brightness =255;
+        light = random(-1,-7);
+
+      }
+      if(brightness<0)
+      {
+       location = new PVector(random(width),random(height-height/5));
+        light = random(1,7);
+        starSize =  random(3,7);
+        brightness =0 ;
+      }
+       brightness +=light;
+
+    }
+
+    void drop()
+    {
+      if(location.x >width || location.y>height-height/8)
+      {
+        location.x = random(width);
+        location.y = random(height-height/8);
+        dropSpeed = random(2,6);
+      }
+      location.x+=dropSpeed;
+      location.y+=dropSpeed;
+
+    }
+
+    void dropDisplay()
+    {
+      fill(255);
+      for(float i=20;i>0;i-=1){
+        ellipse(location.x-i,location.y-i,starSize/i,starSize/i);
+      }
+      ellipse(location.x,location.y,starSize,starSize);
+    }
+
+
+  }
 }
 </script>
 <canvas id="mycanvas"></canvas>
