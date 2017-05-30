@@ -1,5 +1,5 @@
 <head>
-<script src="/js/processing.min.js"></script>
+<script src="processing.min.js"></script>
 </head>
 <body>
 <script data-processing-target="mycanvas" type="text/processing">
@@ -7,12 +7,10 @@
   ArrayList<Point> myArr;
   int starNum = 800;
   int starLimit = 500;
-  int textSize = 210;
+  int textSize=30;
   PFont font;
-  String text[] = {"디자인 프로그래밍","★☆★☆★","배경에 별이","깜빡이고","별똥별이","떨어지네","!@#!@#","Star!"};
+  String textArray[] = {"디자인 프로그래밍","it's my webSite","Hello World"};
   int idx = 0;
-
-  String myText = "Type something";
 
   Star myStar[] = new Star[starNum];
 
@@ -22,23 +20,17 @@
     size(window.outerWidth,window.outerHeight);
     b = loadImage("bg.png");
     myArr = new ArrayList();
-
     font = loadFont("휴먼가는샘체-70.vlw");
-
-
     imageMode(CENTER);
     b.resize(width,height);
     for(int i=0;i<starNum;i++)
       myStar[i] = new Star();
 
-    setText(text[idx]);
+    textSize = width/10;
+    setText(textArray[idx]);
   }
-
-
-
   void draw()
   {
-
    image(b,width/2,height/2);
    for(int i=0;i<starLimit;i++)
     {
@@ -58,44 +50,43 @@
      myArr.get(i).update();
      myArr.get(i).display();
    }
-
-   description();
    auto();
+   description();
+
   }
 
   void description()
   {
-   textSize(15);
+   textSize = width/20;
    fill(200+random(-30,30),180);
    text("Click to Screen",width-width/5,height-height/20);
-      text(myText, 0, 0, width, height);
   }
 
   void auto()
   {
-  for(int i=0;i<myArr.size();i++)
-  {
-    if(!myArr.get(i).isEnd())
-      return;
-  }
-  textChange();
+    for(int i=0;i<myArr.size();i++)
+    {
+      if(!myArr.get(i).isEnd())
+        return;
+    }
+    textChange();
   }
 
 
   void textChange()
   {
-  myArr.clear();
-  idx++;
+    myArr.clear();
+    idx++;
 
-  if(idx==text.length)
-    idx = 0;
+    if(idx==textArray.length)
+      idx = 0;
 
-  setText(text[idx]);
+    setText(textArray[idx]);
   }
+
   void mouseClicked()
   {
-  textChange();
-
+    textChange();
   }
 
 
