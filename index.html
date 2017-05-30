@@ -1,7 +1,98 @@
-<!DOCTYPE html>
-<html>
+<head>
+<script src="/js/processing.min.js"></script>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+<script data-processing-target="mycanvas" type="text/processing">
+int num = 70;
+myClass my[] = new myClass[num];
+void setup()
+{
+  size(600,600);
+  noStroke();
+  for(int i=0;i<num;i++)
+    my[i] = new myClass();
+
+}
+
+void draw()
+{
+  background(0);
+  for(int i=0;i<num;i++)
+  {
+   my[i].move();
+
+   for(int j=0;j<num;j++)
+   {
+     if(i==j)
+       continue;
+       if(my[i].isCrash(my[j].xpos,my[j].ypos,my[j].getBig()))
+         my[j].makeBig();
+   }
+  }
+
+}
+
+class myClass
+{
+ float xpos;
+ float ypos;
+ int big = 50;
+ int small = 30;
+
+ myClass()
+ {
+   xpos =random(width);
+   ypos =random(height);
+ }
+
+ void move()
+ {
+   xpos = random(xpos-5,xpos+5);
+   ypos = random(ypos-5,ypos+5);
+   fill(255,100);
+   ellipse(xpos,ypos,big,big);
+   fill(255,180);
+   ellipse(xpos,ypos,small,small);
+   fill(0);
+   text("Cell",xpos,ypos);
+
+ }
+
+  boolean isCrash(float xp, float yp, float b)
+  {
+    if(dist(xpos,ypos,xp,yp)<small && big<=b)
+    {
+      small = 0;
+      big = 0;
+      xpos = -100;
+      ypos =-100;
+
+      return true;
+    }
+    return false;
+  }
+
+  void makeBig()
+  {
+    big+=20;
+    small+=20;
+  }
+
+  float getX()
+  {
+    return xpos;
+  }
+  float getY()
+  {
+   return ypos;
+  }
+  float getBig()
+  {
+    return big;
+  }
+
+}
+</script>
+<canvas id="mycanvas"></canvas>
 </body>
 </html>
