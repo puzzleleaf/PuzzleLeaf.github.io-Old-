@@ -3,7 +3,7 @@
 </head>
 <body>
 <script data-processing-target="mycanvas" type="text/processing">
-  PImage starBg;
+  PImage b;
   ArrayList<Point> myArr;
   int starNum = 800;
   int starLimit = 500;
@@ -20,14 +20,14 @@
   void setup()
   {
     size(window.outerWidth,window.outerHeight);
-    starBg = loadImage("bg.png");
+    b = loadImage("bg.png");
     myArr = new ArrayList();
 
     font = loadFont("휴먼가는샘체-70.vlw");
 
 
     imageMode(CENTER);
-    starBg.resize(width,height);
+    b.resize(width,height);
     for(int i=0;i<starNum;i++)
       myStar[i] = new Star();
 
@@ -39,7 +39,7 @@
   void draw()
   {
 
-   image(starBg,width/2,height/2);
+   image(b,width/2,height/2);
    for(int i=0;i<starLimit;i++)
     {
       if(i%starLimit/3==0)
