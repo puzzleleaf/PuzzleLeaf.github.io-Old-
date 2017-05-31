@@ -60,6 +60,7 @@
    textSize = width/20;
    fill(200+random(-30,30),180);
    text("Click to Screen",width-width/5,height-height/20);
+   textSize = width/10;
   }
 
   void auto()
@@ -101,8 +102,17 @@
   pg.endDraw();
   pg.loadPixels();
 
-  for(int h=0;h<height;h+=4)
-    for(int w=0;w<width;w+=4)
+    int val = 4;
+
+    if(width>1100)
+      val = 4;
+    else if(width>800)
+      val =3;
+    else
+      val =2;
+
+  for(int h=0;h<height;h+=val)
+    for(int w=0;w<width;w+=val)
     {
        if(pg.pixels[width*h+w]!=0){
          Point temp = new Point(w,h);
