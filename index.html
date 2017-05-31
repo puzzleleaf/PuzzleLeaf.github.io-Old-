@@ -9,7 +9,7 @@
   int starLimit = 500;
   int textSize=30;
   PFont font;
-  String textArray[] = {"디자인 프로그래밍","it's my webSite","Hello World"};
+  String textArray[] = {"밤 하늘에 쓰여진 별들\nStars written in the night sky"};
   int idx = 0;
 
   Star myStar[] = new Star[starNum];
@@ -17,7 +17,7 @@
 
   void setup()
   {
-    size(window.outerWidth,window.outerHeight);
+    size(800,500);
     b = loadImage("bg.png");
     myArr = new ArrayList();
     font = loadFont("휴먼가는샘체-70.vlw");
@@ -26,7 +26,7 @@
     for(int i=0;i<starNum;i++)
       myStar[i] = new Star();
 
-    textSize = width/10;
+    textSize = width/15;
     setText(textArray[idx]);
   }
   void draw()
@@ -50,7 +50,7 @@
      myArr.get(i).update();
      myArr.get(i).display();
    }
-   auto();
+   //auto();
    description();
 
   }
@@ -60,7 +60,7 @@
    textSize = width/20;
    fill(200+random(-30,30),180);
    text("Click to Screen",width-width/5,height-height/20);
-   textSize = width/10;
+   textSize = width/15;
   }
 
   void auto()
@@ -106,7 +106,7 @@
 
     if(width>1100)
       val = 4;
-    else if(width>800)
+    else if(width>500)
       val =3;
     else
       val =2;
@@ -193,7 +193,7 @@
     float brightness;
     float starSize;
     float light;
-    float dropSpeed = random(1,4);
+    float dropSpeed = random(3,7);
 
 
     Star()
@@ -224,9 +224,9 @@
       }
       if(brightness<0)
       {
-       location = new PVector(random(width),random(height-height/5));
+       location = new PVector(random(width),random(height));
         light = random(1,7);
-        starSize =  random(3,7);
+        starSize =  random(3,6);
         brightness =0 ;
       }
        brightness +=light;
@@ -238,7 +238,7 @@
       if(location.x >width || location.y>height-height/8)
       {
         location.x = random(width);
-        location.y = random(height-height/8);
+        location.y = random(height);
         dropSpeed = random(2,6);
       }
       location.x+=dropSpeed;
@@ -249,7 +249,7 @@
     void dropDisplay()
     {
       fill(255);
-      for(float i=20;i>0;i-=1){
+      for(float i=5;i>0;i-=1){
         ellipse(location.x-i,location.y-i,starSize/i,starSize/i);
       }
       ellipse(location.x,location.y,starSize,starSize);
@@ -259,6 +259,8 @@
   }
 
 </script>
+<p align=CENTER>
 <canvas id="mycanvas"></canvas>
+</p>
 </body>
 </html>
