@@ -34,13 +34,13 @@
    image(b,width/2,height/2);
    for(int i=0;i<starLimit;i++)
     {
-      if(i%starLimit/7==0)
-     {
+      if(i%200==0)
+      {
        myStar[i].myStar();
        myStar[i].myDisplay();
 
-     }
-     else if(i%starLimit/10==0)
+      }
+     else if(i%150==0)
      {
        myStar[i].drop();
        myStar[i].dropDisplay();
@@ -62,7 +62,7 @@
    {
      Point temp = new Point(mouseX,mouseY);
      myArr.add(temp);
-    }
+   }
    //auto();
    description();
 
@@ -100,7 +100,8 @@
 
   void mouseClicked()
   {
-    textChange();
+    if(mouseButton == RIGHT)
+      textChange();
   }
 
 
@@ -208,6 +209,8 @@
     float light;
     float dropSpeed = random(3,7);
 
+    PVector myStarLoc[] = new PVector[4];
+
 
     Star()
     {
@@ -216,6 +219,11 @@
       starSize = random(3,7);
       light = random(1,7);
       brightness =30;
+      for(int i =0;i<4;i++)
+      {
+        myStarLoc[i] = new PVector(random(location.x-50,location.x+50),
+        random(location.y-50,location.y+50));
+      }
     }
 
     void display()
@@ -248,10 +256,10 @@
 
     void drop()
     {
-      if(location.x >width || location.y>height-height/8)
+      if(location.x >width || location.y>height)
       {
         location.x = random(width);
-        location.y = random(height);
+        location.y = 0;
         dropSpeed = random(2,6);
       }
       location.x+=dropSpeed;
