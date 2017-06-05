@@ -1,5 +1,16 @@
 <head>
 <script src="processing.min.js"></script>
+<style>
+
+input{
+  width:50%;
+  position:fixed;
+  left:25%;
+  text-align: center;
+
+}
+
+</style>
 </head>
 <body>
 <script data-processing-target="mycanvas" type="text/processing">
@@ -9,11 +20,12 @@
   int starLimit = 500;
   int textSize=30;
   PFont font;
-  String textArray[] = {"밤 하늘에 쓰여진 별들\nStars written in the night sky"};
+  String textArray[] = {"밤 하늘에 쓰여진 별들\nStars written in the night sky","디자인 프로그래밍\n최종발표"};
   int idx = 0;
 
   Star myStar[] = new Star[starNum];
 
+  var myTxt = document.getElementById("userInput").value;
 
   void setup()
   {
@@ -63,16 +75,27 @@
      Point temp = new Point(mouseX,mouseY);
      myArr.add(temp);
    }
-   //auto();
+
+
+
    description();
 
+  }
+
+  void keyPressed()
+  {
+    if(keyCode == ENTER)
+    {
+        myTxt = document.getElementById("userInput").value;
+        htmlTextChange(myTxt);
+    }
   }
 
   void description()
   {
    textSize = width/20;
    fill(200+random(-30,30),180);
-   text("Click to Screen",width-width/5,height-height/20);
+   text("왼쪽 클릭 - 그리기\n오른쪽 클릭 - 새로운 문자\n엔터 - 내가 입력한 문자",width-width/4,height-height/10);
    textSize = width/15;
   }
 
@@ -87,6 +110,11 @@
   }
 
 
+  void htmlTextChange(String txt)
+  {
+    myArr.clear();
+    setText(txt);
+  }
   void textChange()
   {
     myArr.clear();
@@ -321,12 +349,18 @@
       }
   }
 
-
   }
 
 </script>
 <p align=CENTER>
 <canvas id="mycanvas"></canvas>
+<form id="form" onsubmit="return false;">
+    <input width="100" align="right" type="text" placeholder="입력 후 위쪽 영역을 누른 후 엔터!"id="userInput" />
+</form>
 </p>
+
+
+
+
 </body>
 </html>
