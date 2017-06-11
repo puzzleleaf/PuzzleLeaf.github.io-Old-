@@ -14,12 +14,12 @@ input{
 </head>
 <body>
 <script data-processing-target="mycanvas" type="text/processing">
-  PImage b;
   ArrayList<Point> myArr;
   int starNum = 800;
   int starLimit = 500;
   int textSize=30;
   PFont font;
+  flaot num = 0;
   String textArray[] = {"밤 하늘에 쓰여진 별들\nStars written in the night sky","디자인 프로그래밍\n최종발표"};
   int idx = 0;
 
@@ -29,12 +29,10 @@ input{
 
   void setup()
   {
-    size(800,500);
-    b = loadImage("bg.jpg");
+    size(900,550);
     myArr = new ArrayList();
     font = loadFont("휴먼가는샘체-70.vlw");
     imageMode(CENTER);
-    b.resize(width,height);
     for(int i=0;i<starNum;i++)
       myStar[i] = new Star();
 
@@ -43,7 +41,13 @@ input{
   }
   void draw()
   {
-   image(b,width/2,height/2);
+    background(7,20,29);
+    drawMoon();
+    drawShadow(((width-width/4)+130)-(num),height/8);
+
+    num++;
+    if(num>300)
+      num=0;
    for(int i=0;i<starLimit;i++)
     {
       if(i%200==0)
@@ -162,6 +166,22 @@ input{
        }
     }
   }
+
+  //달 그리기
+  void drawMoon(){
+      for(int i=1; i<50; i++) {
+        fill(245,10);
+        ellipse(width-width/4, height/8,130-i*5,130-i*5);
+        ellipse(width-width/4, height/8,90,90);
+      }
+  }
+
+void drawShadow(float x, float y) {
+    for(int i=1; i<30; i++) {
+      fill(7,20,29,100);
+      ellipse(x, y,130-i*5,130-i*5);
+    }
+}
 
     // 포인트 이벤트
   class Point
